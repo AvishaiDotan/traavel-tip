@@ -120,8 +120,8 @@ function sendLocation(val) {
             // var LatLng = new google.maps.LatLng(data.lat, data.lng)
             panTo(data.lat,data.lng)
             getWeather(data.lat,data.lng)
-            var LatLng = new google.maps.LatLng(data.lat, data.lng)
-            map.panTo(LatLng)
+            // var LatLng = new google.maps.LatLng(data.lat, data.lng)
+            // map.panTo(LatLng)
         })
         .catch(console.log)
 }

@@ -1,6 +1,9 @@
 import { locService } from './services/loc.service.js'
 import { mapService } from './services/map.service.js'
 
+export const controller = {
+    getWeather,
+}
 
 window.onload = onInit
 window.onAddMarker = onAddMarker
@@ -13,6 +16,7 @@ window.onPanTo = onPanTo
 window.onDeleteLoc = onDeleteLoc
 window.onCloseInfoWidow = onCloseInfoWidow
 window.onSetTitle = onSetTitle
+
 
 
 function onInit() {
@@ -110,7 +114,7 @@ function setCurrentLocationByQueryParams() {
 function onSendSearch(val) {
     console.log(val);
     mapService.sendLocation(val)
-    // document.querySelector('.user-pos').innerText = val.toUpperCase()
+    document.querySelector('.user-pos').innerText = val.toUpperCase()
 }
 
 function onSetTitle(locId) {
