@@ -8,23 +8,23 @@ window.onGetLocs = onGetLocs
 window.onGetUserPos = onGetUserPos
 window.onSendSearch = onSendSearch;
 window.onCopyAddress = onCopyAddress
-
-let markers = [];
+window.onPanTo = onPanTo
+window.onDeleteLoc = onDeleteLoc
 
 
 function onInit() {
-    const Location = { lat: 29.5577, lng: 34.9519 };
+    setCurrentLocationByQueryParams()
     mapService.initMap()
         .then(renderSavedLocations)
-        .catch(() => console.log('Error: cannot init map'))
-        
+        .catch(() => console.log('Error: cannot init map')) 
 }
+
+
 
 function renderApp() {
     mapService.renderMarkers()
         .then(renderSavedLocations)
 }
-
 
 function renderSavedLocations(locations) {
     let strHTMLs = locations.map(({id ,name, createdAt, lat, lng}) => `
@@ -39,19 +39,43 @@ function renderSavedLocations(locations) {
                 </article>
     `)
 
-    window.onPanTo = onPanTo
-    window.onDeleteLoc = onDeleteLoc
 
     document.querySelector('.saved-loc-container').innerHTML = strHTMLs.join('')
 }
 
 
 
+function onPanTo(lat, lng) {
+    mapService.panTo(lat, lng)
+}
+
+function onSendSearch(val) {
+    mapService.sendLocation(val)
+    document.querySelector('.user-pos').innerText = val.toUpperCase()
+}
+
+function onDeleteLoc(locId) {
+    locService.deleteLoc(locId)
+    renderApp()
+}
+
+function onCopyAddress() {
+
+    getPosition()
+        .then((pos) => {
+            const address = `https://avishaidotan.github.io/travel-tip/index.html?lat=${pos.coords.latitude}&lng=${pos.coords.longitude}` 
+            navigator.clipboard.writeText(address);
+        })
+    
+}
+
 function onAddMarker(position) {
     mapService.addMarker(position)
     renderApp()
 }
 
+
+// Getters
 function onGetLocs(ev) {
     console.log();
     locService.getLocs()
@@ -73,29 +97,17 @@ function onGetUserPos() {
         })
 }
 
-function onPanTo(lat, lng) {
-    mapService.panTo(lat, lng)
-}
+// SETTERS
+function setCurrentLocationByQueryParams() {
+    const urlParams = new URLSearchParams(window.location.search);
 
-function onSendSearch(val) {
-    mapService.sendLocation(val)
-    document.querySelector('.user-pos').innerText = val.toUpperCase()
-}
+    const lat = urlParams.get('lat');
+    const lng = urlParams.get('lng');
 
-function onDeleteLoc(locId) {
-    locService.deleteLoc(locId)
-    renderApp()
-}
+    if (!lat || !lng) return
 
-function onCopyAddress() {
-    getPosition()
-        .then((pos) => {
-            const address = `https://github.io/me/travelTip/index.html?lat=${pos.coords.latitude}&lng=${pos.coords.longitude}` 
-            navigator.clipboard.writeText(address);
-        })
-    
+    onPanTo(lat, lng)
 }
-
 
 // This function provides a Promise API to the callback-based-api of getCurrentPosition
 function getPosition() {
