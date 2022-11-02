@@ -28,9 +28,14 @@
 
 
     <main class="main-container">
+        <div class="my-location-container">
+            <section class="info-section">
+                <h3><span class="heading">You are at: </span><span class="user-pos"></span></h3>
+            </section>
+            <button onclick="onGetUserPos()" class="my-location">My Location</button>
+        </div>
 
         <section class="map-container">
-            <button onclick="onGetUserPos()" class="my-location">My Location</button>
             <div id="map" style="width: 100%; height: 100%;"></div>
         </section>
 
@@ -57,14 +62,14 @@
         </div>
     </main>
 
-    <button onclick="onCopyAddress()">Copy Current Location</button>
+    <!-- <button onclick="onCopyAddress()">Copy Current Location</button>
     <button onclick="onAddMarker()" class="btn-add-marker">Add Marker Speific Location</button>
 
     <button onclick="onGetLocs()" class="btn-get-locs">Get Locations</button>
-    <button onclick="onPanTo()" class="btn-pan">Pan Map to Tokyo</button>
+    <button onclick="onPanTo()" class="btn-pan">Pan Map to Tokyo</button> -->
 
-    <p>You are at: <span class="user-pos"></span></p>
-    <p>Locations:
+    <!-- <p>You are at: <span class="user-pos"></span></p>
+    <p>Locations: -->
     <pre class="locs"></pre>
     </p>
 

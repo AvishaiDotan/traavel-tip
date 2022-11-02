@@ -67,7 +67,6 @@ h1 {
 
 .saved-loc-container {
   grid-area: saved-loc;
-  background-color: red;
   height: 290px;
 }
 
@@ -91,7 +90,6 @@ h1 {
 .map-container {
   background-color: pink;
   grid-area: map;
-  
 }
 
 /*? -------------------------SEARCH--------------------- */
@@ -143,9 +141,24 @@ h1 {
 .logo {
   height: 120px;
 }
-
-.my-location{
+.my-location-container {
   grid-area: my-location;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.my-location {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 50px;
+  width: 100px;
+  background: rgb(3, 3, 144);
+  background: radial-gradient(
+    circle,
+    rgba(3, 3, 144, 0.14329481792717091) 0%,
+    rgba(100, 69, 240, 0.8099614845938375) 100%
+  );
 }
 
 .weather-container {
@@ -155,6 +168,40 @@ h1 {
   text-align: center;
 }
 
-.heading{
+.heading {
   text-decoration: underline;
+}
+
+article {
+  border: 1px solid black;
+  margin-top: 10px;
+  background: rgb(16, 16, 110);
+  background: radial-gradient(
+    circle,
+    rgba(16, 16, 110, 0.8603816526610644) 0%,
+    rgba(100, 69, 240, 0.8099614845938375) 100%
+  );
+  border-radius: 10px;
+  display: flex;
+  justify-content: center;
+  text-align: center;
+  align-items: center;
+  height: 70px;
+}
+
+.location-actions {
+  display: flex;
+  flex-direction: column;
+  border-radius: 10px;
+  gap: 5px;
+}
+
+.goto-action {
+  background-color: green;
+  border: 1px solid rgba(255, 254, 254, 0);
+}
+
+.delete-action {
+  background-color: rgba(243, 57, 57, 0.575);
+  border: 1px solid rgba(255, 254, 254, 0);
 }

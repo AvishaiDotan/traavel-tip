@@ -3,9 +3,13 @@ import { mapService } from './services/map.service.js'
 
 export const controller = {
     getWeather,
+<<<<<<< HEAD
     renderWeather,
 }
 
+=======
+}
+>>>>>>> 1f06fda3a0ff15f8465a822ec83956a0bde3889d
 
 window.onload = onInit
 window.onAddMarker = onAddMarker
@@ -18,6 +22,7 @@ window.onPanTo = onPanTo
 window.onDeleteLoc = onDeleteLoc
 window.onCloseInfoWidow = onCloseInfoWidow
 window.onSetTitle = onSetTitle
+
 
 
 function onInit() {
@@ -144,6 +149,14 @@ function setCurrentLocationByQueryParams() {
     onPanTo(lat, lng)
 }
 
+<<<<<<< HEAD
+=======
+function onSendSearch(val) {
+    console.log(val);
+    mapService.sendLocation(val)
+    document.querySelector('.user-pos').innerText = val.toUpperCase()
+}
+>>>>>>> 1f06fda3a0ff15f8465a822ec83956a0bde3889d
 
 function onSetTitle(locId) {
     const title = document.querySelector(`.title-text`).value
