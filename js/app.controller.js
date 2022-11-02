@@ -51,11 +51,6 @@ function onPanTo(lat, lng) {
     mapService.panTo(lat, lng)
 }
 
-function onSendSearch(val) {
-    mapService.sendLocation(val)
-    document.querySelector('.user-pos').innerText = val.toUpperCase()
-}
-
 function onDeleteLoc(locId) {
     locService.deleteLoc(locId)
     renderApp()
@@ -79,10 +74,8 @@ function onAddMarker(position) {
 
 // Getters
 function onGetLocs(ev) {
-    console.log();
     locService.getLocs()
         .then(locs => {
-            console.log('Locations:', locs)
             document.querySelector('.locs').innerText = JSON.stringify(locs, null, 2)
         })
 }
