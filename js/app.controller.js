@@ -3,15 +3,16 @@ import { mapService } from './services/map.service.js'
 
 
 
-window.onload = onInit
-window.onAddMarker = onAddMarker
-window.onPanTo = onPanTo
-window.onGetLocs = onGetLocs
-window.onGetUserPos = onGetUserPos
+window.onload = onInit;
+window.onAddMarker = onAddMarker;
+window.onPanTo = onPanTo;
+window.onGetLocs = onGetLocs;
+window.onGetUserPos = onGetUserPos;
 window.onSendSearch = onSendSearch;
-window.onCopyAddress = onCopyAddress
-window.onPanTo = onPanTo
-window.onDeleteLoc = onDeleteLoc
+window.onCopyAddress = onCopyAddress;
+window.onPanTo = onPanTo;
+window.onDeleteLoc = onDeleteLoc;
+window.getWeather = getWeather
 
 
 function onInit() {
@@ -20,7 +21,6 @@ function onInit() {
         .then(renderSavedLocations)
         .catch(() => console.log('Error: cannot init map')) 
 }
-
 
 
 function renderApp() {
@@ -45,15 +45,10 @@ function renderSavedLocations(locations) {
     document.querySelector('.saved-loc-container').innerHTML = strHTMLs.join('')
 }
 
-
-
 function onPanTo(lat, lng) {
+    console.log('Panning the Map');
     mapService.panTo(lat, lng)
-}
-
-function onSendSearch(val) {
-    mapService.sendLocation(val)
-    document.querySelector('.user-pos').innerText = val.toUpperCase()
+    getWeather(lat, lng)
 }
 
 function onDeleteLoc(locId) {
@@ -75,7 +70,6 @@ function onAddMarker(position) {
     mapService.addMarker(position)
     renderApp()
 }
-
 
 // Getters
 function onGetLocs(ev) {
@@ -112,11 +106,9 @@ function setCurrentLocationByQueryParams() {
 }
 
 function onSendSearch(val) {
+    console.log(val);
     mapService.sendLocation(val)
-<<<<<<< HEAD
 
-=======
->>>>>>> 54cdd7aacaa74e9f1579419a21058cb42ab78041
     // document.querySelector('.user-pos').innerText = val.toUpperCase()
 }
 
@@ -125,4 +117,18 @@ function getPosition() {
     return new Promise((resolve, reject) => {
         navigator.geolocation.getCurrentPosition(resolve, reject)
     })
+}
+
+function getWeather(lat, lng){
+    const WETH_API = 'a6250b674e919a78ea206f38e4dab46d'
+console.log(lat, lng);
+    return axios.get(`http://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lng}&APPID=${WETH_API}`)
+    .then(res => {
+        console.log(res.data);
+        renderWeather(res.data.main.temp)
+    })
+}
+
+function renderWeather(weather){
+    document.querySelector('.weather-container .heading').innerText = ' '+ weather + ' Celsius' 
 }

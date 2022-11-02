@@ -53,6 +53,7 @@ function addMarker(loc) {
 }
 
 function panTo(lat, lng) {
+    console.log(lat, lng);
     var laLatLng = new google.maps.LatLng(lat, lng)
     gMap.panTo(laLatLng)
 }
@@ -75,9 +76,11 @@ function _connectGoogleApi() {
 function sendLocation(val) {
     return axios.get(`https://maps.googleapis.com/maps/api/geocode/json?address=${val}&key=AIzaSyAxdXNT9j1GWz7kU5pwAK8bMSR2OJ0Bg6Q`)
         .then(res => {
+            console.log('im')
             let data = res.data.results[0].geometry.location
-            var LatLng = new google.maps.LatLng(data.lat, data.lng)
-            gMap.panTo(LatLng)
+            // var LatLng = new google.maps.LatLng(data.lat, data.lng)
+            panTo(data.lat,data.lng)
+            getWeather(data.lat,data.lng)
         })
         .catch(console.log)
 }
