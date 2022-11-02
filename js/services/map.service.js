@@ -1,5 +1,6 @@
 // import { storageService } from "./storage.service";
 import { locService } from "./loc.service.js";
+// import { utilsService } from "./utils.service.js";
 
 export const mapService = {
     initMap,
@@ -71,12 +72,12 @@ function _connectGoogleApi() {
 }
 
 function sendLocation(val) {
-    return axios.get(`https://maps.googleapis.com/maps/api/geocode/json?address=${val}&key=AIzaSyAUa9etRbJHXatY5NPGcT4Qej9HqCsTqTg`)
+    return axios.get(`https://maps.googleapis.com/maps/api/geocode/json?address=${val}&key=AIzaSyAxdXNT9j1GWz7kU5pwAK8bMSR2OJ0Bg6Q`)
         .then(res => {
             console.log(res)
             let data = res.data.results[0].geometry.location
-            var laLatLng = new google.maps.LatLng(data.lat, data.lng)
-            gMap.panTo(laLatLng)
+            var LatLng = new google.maps.LatLng(data.lat, data.lng)
+            gMap.panTo(LatLng)
         })
 }
 

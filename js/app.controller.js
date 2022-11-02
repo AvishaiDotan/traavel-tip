@@ -1,6 +1,8 @@
 import { locService } from './services/loc.service.js'
 import { mapService } from './services/map.service.js'
 
+
+
 window.onload = onInit
 window.onAddMarker = onAddMarker
 window.onPanTo = onPanTo
@@ -18,7 +20,6 @@ function onInit() {
         .catch(() => console.log('Error: cannot init map'))
         
 }
-
 
 
 function onAddMarker(position) {
@@ -52,8 +53,9 @@ function onPanTo() {
 }
 
 function onSendSearch(val) {
+    console.log('Search val', val)
     mapService.sendLocation(val)
-    document.querySelector('.user-pos').innerText = val.toUpperCase()
+    // document.querySelector('.user-pos').innerText = val.toUpperCase()
     
 
 }
