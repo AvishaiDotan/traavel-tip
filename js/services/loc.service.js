@@ -4,6 +4,7 @@ import { utilService } from "./utils.service.js"
 export const locService = {
     getLocs,
     addLoc,
+    deleteLoc,
 }
 
 let locs
@@ -26,6 +27,17 @@ function addLoc(name, lat, lng) {
     _saveToStorage()
 }
 
+function deleteLoc(locId) {
+    const locIdx = _getLocIdxById(locId)
+    locs.splice(locIdx, 1)
+    _saveToStorage()
+}
+
+function _getLocIdxById(id) {
+    return locs.findIndex(loc => loc.id === id)
+
+}
+
 function _saveToStorage() {
     storageService.save(LOCATIONS_KEY, locs)
 }
@@ -37,4 +49,5 @@ function _createLocs() {
         {id: utilService.getId(), name: 'Neveragain', lat: 32.047201, lng: 34.832581, weather:'cold', createdAt: Date.now() + 500, updatedAt: ''}
     ]
 }
+
 

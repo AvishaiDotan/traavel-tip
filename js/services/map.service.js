@@ -6,7 +6,8 @@ export const mapService = {
     initMap,
     addMarker,
     panTo,
-    sendLocation
+    sendLocation,
+    renderMarkers,
 }
 
 
@@ -26,18 +27,19 @@ function initMap(lat = 32.0749831, lng = 34.9120554) {
 }
 
 function renderMarkers() {
-    locService.getLocs()
+    return locService.getLocs()
         .then(markers =>
-            markers.forEach(({ title, lat, lng }) => {
-                new google.maps.Marker({
-                    position: { lat, lng },
-                    map: gMap,
-                    title: title,
+            {
+                markers.forEach(({ title, lat, lng }) => {
+                    new google.maps.Marker({
+                        position: { lat, lng },
+                        map: gMap,
+                        title: title,
+                    })
                 })
-                return Promise.resolve(locService.getLocs())
-            })
-        )
 
+                return Promise.resolve(markers)
+            })
 }
 
 function addMarker(loc) {
@@ -58,7 +60,6 @@ function panTo(lat, lng) {
 
 function _connectGoogleApi() {
     if (window.google) return Promise.resolve()
-    console.log('gg');
     const API_KEY = `AIzaSyAxdXNT9j1GWz7kU5pwAK8bMSR2OJ0Bg6Q` //TODO: Enter your API Key
     var elGoogleApi = document.createElement('script')
     elGoogleApi.src = `https://maps.googleapis.com/maps/api/js?key=${API_KEY}`
@@ -87,5 +88,5 @@ function _addListener() {
         onAddMarker(event.latLng);
     });
 
-    return Promise.resolve('')
+    return Promise.resolve()
 }
