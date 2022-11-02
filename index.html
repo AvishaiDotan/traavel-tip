@@ -28,11 +28,21 @@
         <section class="map-container">
             <div id="map" style="width: 100%; height: 100%;"></div>
         </section>
-        <div class="saved-loc-container"></div>
+        <div class="saved-loc-container">
+            <article>
+                <h2></h2>
+                <p></p>
+                <p></p>
+                <div class="location-actions">
+                    <button class="goto-action"></button>
+                    <button class="delete-action"></button>
+                </div>
+            </article>
+        </div>
         <div class="weather-container"></div>
     </main>
 
-
+    <button onclick="onCopyAddress()">Copy Current Location</button>
     <button onclick="onAddMarker()" class="btn-add-marker">Add Marker Speific Location</button>
     
     <button onclick="onGetLocs()" class="btn-get-locs">Get Locations</button>
