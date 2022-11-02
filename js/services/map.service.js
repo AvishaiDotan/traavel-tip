@@ -1,10 +1,11 @@
 export const mapService = {
     initMap,
     addMarker,
-    panTo
+    panTo,
+    sendLocation
 }
 
-let markers = [];
+var gMarkers = [];
 
 // Var that is used throughout this Module (not global)
 var gMap
@@ -35,6 +36,7 @@ function addMarker(loc) {
         title: 'Hello World!'
     })
     markers.push(marker);
+    console.log(marker);
 }
 
 function panTo(lat, lng) {
@@ -56,4 +58,14 @@ function _connectGoogleApi() {
         elGoogleApi.onload = resolve
         elGoogleApi.onerror = () => reject('Google script failed to load')
     })
+}
+
+function sendLocation(val) {
+    return axios.get(`https://maps.googleapis.com/maps/api/geocode/json?address=${val}&key=AIzaSyAUa9etRbJHXatY5NPGcT4Qej9HqCsTqTg`)
+        .then(res => {
+            console.log(res)
+            let data = res.data.results[0].geometry.location
+            var laLatLng = new google.maps.LatLng(data.lat, data.lng)
+            gMap.panTo(laLatLng)
+        })
 }

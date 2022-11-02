@@ -1,78 +1,87 @@
 :root {
-
-
-    /* Sizing */
-    --xl: 980px;
+  /* Sizing */
+  --xl: 980px;
 }
 
 * {
-    box-sizing: border-box;
+  box-sizing: border-box;
 }
-
 
 /* Typography */
 @font-face {
-    font-family: Roboto-Regular;
-    src: url('../fonts/Roboto/Roboto-Regular.ttf');
+  font-family: Roboto-Regular;
+  src: url("../fonts/Roboto/Roboto-Regular.ttf");
 }
 
 @font-face {
-    font-family: Roboto-BoldItalic;
-    src: url('../fonts/Roboto/Roboto-BoldItalic.ttf');
+  font-family: Roboto-BoldItalic;
+  src: url("../fonts/Roboto/Roboto-BoldItalic.ttf");
 }
-
 
 html {
-    font-family: Roboto-Regular;
+  font-family: Roboto-Regular;
 }
-
-
 
 /* Layout */
 main {
-    display: grid;
-    grid-template-columns: 20% 80%;
-    grid-template-rows: 20% 20% 20% 20% 20%;
-    grid-template-areas: "weather search"
-        "weather map"
-        "saved-loc map"
-        "saved-loc map"
-        "saved-loc map";
-    width: 100%;
-    height: calc(100vh - 260px);
+  display: grid;
+  grid-template-columns: 20% 80%;
+  grid-template-rows: 20% 20% 20% 20% 20%;
+  grid-template-areas:
+    "weather search"
+    "weather map"
+    "saved-loc map"
+    "saved-loc map"
+    "saved-loc map";
+  width: 100%;
+  height: calc(100vh - 260px);
 }
 
-.main-layout>*:not(.full) {
-    margin-left: auto;
-    margin-right: auto;
-    max-width: var(--xl);
+.main-layout > *:not(.full) {
+  margin-left: auto;
+  margin-right: auto;
+  max-width: var(--xl);
 }
-
 
 /* COMP */
 
 h1 {
-    font-size: 5em;
-    padding-block: 0.3em;
-    font-family: Roboto-BoldItalic;
+  font-size: 5em;
+  padding-block: 0.3em;
+  font-family: Roboto-BoldItalic;
 }
 
 .search-container {
-    grid-area: search;
-    background-color: green;
+  grid-area: search;
+  background-color: green;
 }
 
 .saved-loc-container {
-    grid-area: saved-loc;
-    background-color: red;
+  grid-area: saved-loc;
+  background-color: red;
 }
 
 .weather-container {
-    grid-area: weather;
-    background-color: blue;
+  grid-area: weather;
+  background-color: blue;
 }
 
 .map-container {
-    background-color: pink;
-    grid-area: map;
+  background-color: pink;
+  grid-area: map;
+}
+
+/*? -------------------------SEARCH--------------------- */
+
+.search-input {
+  height: 50px;
+  width: 629px;
+  border-radius: 10px;
+  border: 1px solid #e9e2e2ed;
+  background-color: #f0f8ff00;
+}
+
+::placeholder {
+  color: white;
+  opacity: 1; /* Firefox */
 }
