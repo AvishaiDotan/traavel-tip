@@ -5,6 +5,8 @@ export const locService = {
     getLocs,
     addLoc,
     deleteLoc,
+    getLocById,
+    setTitle,
 }
 
 let locs
@@ -14,13 +16,6 @@ _createLocs()
 
 
 
-function getLocs() {
-    return new Promise((resolve, reject) => {
-        setTimeout(() => {
-            resolve(locs)
-        }, 2000)
-    })
-}
 
 function addLoc(name, lat, lng) {
     locs.push({id: utilService.getId(), name, lat, lng, weather: 'cold', createdAt: Date.now(), updatedAt: ''})
@@ -33,9 +28,36 @@ function deleteLoc(locId) {
     _saveToStorage()
 }
 
+
+
+
+// Getters
+function getLocs() {
+    return new Promise((resolve, reject) => {
+        setTimeout(() => {
+            resolve(locs)
+        }, 500)
+    })
+}
+
+function getLocById(id) {
+    return locs.find(loc => loc.id === id)
+}
+
+// SETTERS
+function setTitle(locId, title) {
+    const loc = getLocById(locId)
+    loc.name = title
+    _saveToStorage()
+}
+
+
+
+
+
+
 function _getLocIdxById(id) {
     return locs.findIndex(loc => loc.id === id)
-
 }
 
 function _saveToStorage() {

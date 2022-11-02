@@ -8,15 +8,19 @@ export const mapService = {
     panTo,
     sendLocation,
     renderMarkers,
+    closeInfoWindow,
 }
 
 
 // Var that is used throughout this Module (not global)
-var gMap
+let map
+let currInfoWindow
+let markers = []
+
 
 function initMap(lat = 32.0749831, lng = 34.9120554) {
     return _connectGoogleApi().then(() => {
-        gMap = new google.maps.Map(
+        map = new google.maps.Map(
             document.querySelector('#map'), {
             center: { lat, lng },
             zoom: 15
@@ -27,25 +31,56 @@ function initMap(lat = 32.0749831, lng = 34.9120554) {
 }
 
 function renderMarkers() {
+    markers.forEach(marker => marker.setMap(null))
     return locService.getLocs()
-        .then(markers =>
-            {
-                markers.forEach(({ title, lat, lng }) => {
-                    new google.maps.Marker({
-                        position: { lat, lng },
-                        map: gMap,
-                        title: title,
-                    })
+        .then(locations => {
+            
+            markers = locations.map(({ id, name, lat, lng }) => {
+
+                const marker = new google.maps.Marker({
+                    position: { lat, lng },
+                    map: map,
+                    title: name,
                 })
 
-                return Promise.resolve(markers)
+                const contentString =
+                    `<article>
+                    <h2>Change Location Title</h2>
+                    <label>Location Name
+                        <input class="title-text .${id}" type="text" value="${name}">
+                    </label>
+                    <div class="marker-modal-actions">
+                        <button class="set-title-action" onclick="onSetTitle('${id}')">Save</button>
+                        <button onclick="onCloseInfoWidow('${id}')">Cancel</button>
+                    </div>
+                </article>`
+
+                const infoWindow = new google.maps.InfoWindow({
+                    content: contentString,
+                });
+
+                marker.addListener("click", () => {
+                    if (currInfoWindow) currInfoWindow.close()
+                    currInfoWindow = infoWindow
+
+                    infoWindow.open({
+                        anchor: marker,
+                        gMap: map,
+                    });
+
+                })
+
+                return marker
             })
+            return Promise.resolve(locations)
+        })
 }
+
 
 function addMarker(loc) {
     var marker = new google.maps.Marker({
         position: loc,
-        map: gMap,
+        map: map,
         title: 'Hello World!',
     })
 
@@ -55,7 +90,11 @@ function addMarker(loc) {
 function panTo(lat, lng) {
     console.log(lat, lng);
     var laLatLng = new google.maps.LatLng(lat, lng)
-    gMap.panTo(laLatLng)
+    map.panTo(laLatLng)
+}
+
+function closeInfoWindow() {
+    currInfoWindow.close()
 }
 
 
@@ -81,13 +120,15 @@ function sendLocation(val) {
             // var LatLng = new google.maps.LatLng(data.lat, data.lng)
             panTo(data.lat,data.lng)
             getWeather(data.lat,data.lng)
+            var LatLng = new google.maps.LatLng(data.lat, data.lng)
+            map.panTo(LatLng)
         })
         .catch(console.log)
 }
 
 
 function _addListener() {
-    gMap.addListener("click", (event) => {
+    map.addListener("click", (event) => {
         onAddMarker(event.latLng);
     });
 

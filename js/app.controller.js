@@ -2,24 +2,25 @@ import { locService } from './services/loc.service.js'
 import { mapService } from './services/map.service.js'
 
 
-
-window.onload = onInit;
-window.onAddMarker = onAddMarker;
-window.onPanTo = onPanTo;
-window.onGetLocs = onGetLocs;
-window.onGetUserPos = onGetUserPos;
+window.onload = onInit
+window.onAddMarker = onAddMarker
+window.onPanTo = onPanTo
+window.onGetLocs = onGetLocs
+window.onGetUserPos = onGetUserPos
 window.onSendSearch = onSendSearch;
-window.onCopyAddress = onCopyAddress;
-window.onPanTo = onPanTo;
-window.onDeleteLoc = onDeleteLoc;
-window.getWeather = getWeather
+window.onCopyAddress = onCopyAddress
+window.onPanTo = onPanTo
+window.onDeleteLoc = onDeleteLoc
+window.onCloseInfoWidow = onCloseInfoWidow
+window.onSetTitle = onSetTitle
 
 
 function onInit() {
     setCurrentLocationByQueryParams()
+
     mapService.initMap()
         .then(renderSavedLocations)
-        .catch(() => console.log('Error: cannot init map')) 
+        .catch((err) => console.log('Error: cannot init map', err)) 
 }
 
 
@@ -62,8 +63,11 @@ function onCopyAddress() {
         .then((pos) => {
             const address = `https://avishaidotan.github.io/travel-tip/index.html?lat=${pos.coords.latitude}&lng=${pos.coords.longitude}` 
             navigator.clipboard.writeText(address);
-        })
-    
+        }) 
+}
+
+function onCloseInfoWidow(locId) {
+    mapService.closeInfoWindow(locId) 
 }
 
 function onAddMarker(position) {
@@ -73,10 +77,8 @@ function onAddMarker(position) {
 
 // Getters
 function onGetLocs(ev) {
-    console.log();
     locService.getLocs()
         .then(locs => {
-            console.log('Locations:', locs)
             document.querySelector('.locs').innerText = JSON.stringify(locs, null, 2)
         })
 }
@@ -108,8 +110,15 @@ function setCurrentLocationByQueryParams() {
 function onSendSearch(val) {
     console.log(val);
     mapService.sendLocation(val)
-
     // document.querySelector('.user-pos').innerText = val.toUpperCase()
+}
+
+function onSetTitle(locId) {
+    const title = document.querySelector(`.title-text`).value
+    locService.setTitle(locId, title)
+    mapService.closeInfoWindow()
+    renderApp()
+
 }
 
 // This function provides a Promise API to the callback-based-api of getCurrentPosition
