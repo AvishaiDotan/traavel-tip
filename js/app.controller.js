@@ -79,15 +79,9 @@ function onPanTo(lat, lng) {
 }
 
 function onSendSearch(val) {
-    console.log('Search val', val)
     mapService.sendLocation(val)
-<<<<<<< HEAD
-    // document.querySelector('.user-pos').innerText = val.toUpperCase()
-    
 
-=======
-    document.querySelector('.user-pos').innerText = val.toUpperCase()
->>>>>>> e1fd4b55442fd6261a9f1b14b24d71b51055fe05
+    // document.querySelector('.user-pos').innerText = val.toUpperCase()
 }
 
 function onDeleteLoc(locId) {
