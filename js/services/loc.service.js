@@ -1,4 +1,5 @@
 import { storageService } from "./storage.service.js"
+import { utilService } from "./utils.service.js"
 
 export const locService = {
     getLocs,
@@ -21,7 +22,7 @@ function getLocs() {
 }
 
 function addLoc(name, lat, lng) {
-    locs.push({name, lat, lng})
+    locs.push({id: utilService.getId(), name, lat, lng, weather: 'cold', createdAt: Date.now(), updatedAt: ''})
     _saveToStorage()
 }
 
@@ -30,10 +31,10 @@ function _saveToStorage() {
 }
 
 function _createLocs() {
-    locs = (storageService.load(LOCATIONS_KEY)) ? storageService.load(LOCATIONS_KEY) : [
-        { name: 'Greatplace', lat: 32.047104, lng: 34.832384 }, 
-        { name: 'Neveragain', lat: 32.047201, lng: 34.832581 }
+    locs = (storageService.load(LOCATIONS_KEY)) ? storageService.load(LOCATIONS_KEY) : 
+    [
+        {id: utilService.getId(), name: 'Greatplace', lat: 32.047104, lng: 34.832384, weather: 'sunny', createdAt: Date.now(), updatedAt: ''}, 
+        {id: utilService.getId(), name: 'Neveragain', lat: 32.047201, lng: 34.832581, weather:'cold', createdAt: Date.now() + 500, updatedAt: ''}
     ]
 }
-
 
