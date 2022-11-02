@@ -4,21 +4,27 @@ export const mapService = {
     panTo
 }
 
+let markers = [];
 
 // Var that is used throughout this Module (not global)
 var gMap
 
 function initMap(lat = 32.0749831, lng = 34.9120554) {
-    console.log('InitMap')
-    return _connectGoogleApi()
+    console.log('initMap')
+    return _connectGoogleApi().then(() => {
+        console.log('google available')
+        gMap = new google.maps.Map(
+            document.querySelector('#map'), {
+            center: { lat, lng },
+            zoom: 15
+        })
+        console.log('Map!', gMap)
+    })
         .then(() => {
-            console.log('google available')
-            gMap = new google.maps.Map(
-                document.querySelector('#map'), {
-                center: { lat, lng },
-                zoom: 15
-            })
-            console.log('Map!', gMap)
+            gMap.addListener("click", (event) => {
+                addMarker(event.latLng);
+            });
+
         })
 }
 
@@ -28,7 +34,7 @@ function addMarker(loc) {
         map: gMap,
         title: 'Hello World!'
     })
-    return marker
+    markers.push(marker);
 }
 
 function panTo(lat, lng) {
@@ -39,7 +45,8 @@ function panTo(lat, lng) {
 
 function _connectGoogleApi() {
     if (window.google) return Promise.resolve()
-    const API_KEY = '' //TODO: Enter your API Key
+    console.log('gg');
+    const API_KEY = `AIzaSyAxdXNT9j1GWz7kU5pwAK8bMSR2OJ0Bg6Q` //TODO: Enter your API Key
     var elGoogleApi = document.createElement('script')
     elGoogleApi.src = `https://maps.googleapis.com/maps/api/js?key=${API_KEY}`
     elGoogleApi.async = true

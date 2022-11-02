@@ -7,12 +7,17 @@ window.onPanTo = onPanTo
 window.onGetLocs = onGetLocs
 window.onGetUserPos = onGetUserPos
 
+let markers = [];
+
+
 function onInit() {
-    mapService.initMap()
-        .then(() => {
-            console.log('Map is ready')
-        })
+    const Location = { lat: 29.5577, lng: 34.9519 };
+
+    mapService.initMap().then(() => { console.log('Map is ready') })
         .catch(() => console.log('Error: cannot init map'))
+
+
+
 }
 
 // This function provides a Promise API to the callback-based-api of getCurrentPosition
@@ -23,9 +28,9 @@ function getPosition() {
     })
 }
 
-function onAddMarker() {
-    console.log('Adding a marker')
-    mapService.addMarker({ lat: 32.0749831, lng: 34.9120554 })
+function onAddMarker(position) {
+    console.log('Adding a marker', position);
+    mapService.addMarker(position)
 }
 
 function onGetLocs() {
