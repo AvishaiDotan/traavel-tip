@@ -79,6 +79,7 @@ function sendLocation(val) {
             var LatLng = new google.maps.LatLng(data.lat, data.lng)
             gMap.panTo(LatLng)
         })
+        .catch(console.log)
 }
 
 
