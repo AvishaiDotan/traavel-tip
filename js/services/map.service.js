@@ -119,14 +119,8 @@ function setSearch(val) {
         .then(res => {
             let data = res.data.results[0].geometry.location
             panTo(data.lat,data.lng)
-<<<<<<< HEAD
             controller.getWeather(data.lat,data.lng)
                 .then(controller.renderWeather)
-=======
-            getWeather(data.lat,data.lng)
-            // var LatLng = new google.maps.LatLng(data.lat, data.lng)
-            // map.panTo(LatLng)
->>>>>>> 1f06fda3a0ff15f8465a822ec83956a0bde3889d
         })
         .catch(console.log)
 }
