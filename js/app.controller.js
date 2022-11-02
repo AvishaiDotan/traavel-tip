@@ -1,6 +1,8 @@
 import { locService } from './services/loc.service.js'
 import { mapService } from './services/map.service.js'
 
+
+
 window.onload = onInit
 window.onAddMarker = onAddMarker
 window.onPanTo = onPanTo
@@ -107,6 +109,11 @@ function setCurrentLocationByQueryParams() {
     if (!lat || !lng) return
 
     onPanTo(lat, lng)
+}
+
+function onSendSearch(val) {
+    mapService.sendLocation(val)
+    // document.querySelector('.user-pos').innerText = val.toUpperCase()
 }
 
 // This function provides a Promise API to the callback-based-api of getCurrentPosition
