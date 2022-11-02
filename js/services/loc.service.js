@@ -18,7 +18,8 @@ _createLocs()
 
 
 function addLoc(name, lat, lng) {
-    locs.push({id: utilService.getId(), name, lat, lng, weather: 'cold', createdAt: Date.now(), updatedAt: ''})
+    console.log('locs',locs)
+    locs.push({id: utilService.getId(), name, lat, lng, weather: 'cold', createdAt:  new Date().toLocaleString(), updatedAt: ''})
     _saveToStorage()
 }
 
