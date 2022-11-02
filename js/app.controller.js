@@ -1,13 +1,18 @@
 import { locService } from './services/loc.service.js'
 import { mapService } from './services/map.service.js'
 
+export const controller = {
+    getWeather,
+    renderWeather,
+}
+
 
 window.onload = onInit
 window.onAddMarker = onAddMarker
 window.onPanTo = onPanTo
 window.onGetLocs = onGetLocs
 window.onGetUserPos = onGetUserPos
-window.onSendSearch = onSendSearch;
+window.onSendSearch = onSetSearch;
 window.onCopyAddress = onCopyAddress
 window.onPanTo = onPanTo
 window.onDeleteLoc = onDeleteLoc
@@ -17,8 +22,11 @@ window.onSetTitle = onSetTitle
 
 function onInit() {
     setCurrentLocationByQueryParams()
+    getWeather(mapService.initLocation.lat, mapService.initLocation.lng)
+        .then(renderWeather)
 
     mapService.initMap()
+        .then(mapService.renderMarkers)
         .then(renderSavedLocations)
         .catch((err) => console.log('Error: cannot init map', err)) 
 }
@@ -46,8 +54,18 @@ function renderSavedLocations(locations) {
     document.querySelector('.saved-loc-container').innerHTML = strHTMLs.join('')
 }
 
+function renderWeather(weather){
+    const {temp} = weather.main
+    const {description} = weather.weather[0]
+
+    document.querySelector('.weather-container .heading').innerText = `${description}, ${temp} celsius` 
+}
+
+
+
+
+// on Functions
 function onPanTo(lat, lng) {
-    console.log('Panning the Map');
     mapService.panTo(lat, lng)
     getWeather(lat, lng)
 }
@@ -60,10 +78,10 @@ function onDeleteLoc(locId) {
 function onCopyAddress() {
 
     getPosition()
-        .then((pos) => {
-            const address = `https://avishaidotan.github.io/travel-tip/index.html?lat=${pos.coords.latitude}&lng=${pos.coords.longitude}` 
-            navigator.clipboard.writeText(address);
-        }) 
+    .then((pos) => {
+        const address = `https://avishaidotan.github.io/travel-tip/index.html?lat=${pos.coords.latitude}&lng=${pos.coords.longitude}` 
+        navigator.clipboard.writeText(address);
+    }) 
 }
 
 function onCloseInfoWidow(locId) {
@@ -75,24 +93,43 @@ function onAddMarker(position) {
     renderApp()
 }
 
-// Getters
-function onGetLocs(ev) {
-    locService.getLocs()
-        .then(locs => {
-            document.querySelector('.locs').innerText = JSON.stringify(locs, null, 2)
-        })
+function onSetSearch(val) {
+    mapService.setSearch(val)
+    // document.querySelector('.user-pos').innerText = val.toUpperCase()
 }
 
-function onGetUserPos() {
-    getPosition()
+
+
+// Getters
+function getWeather(lat, lng){
+    const WETH_API = 'a6250b674e919a78ea206f38e4dab46d'
+    return axios.get(`http://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lng}&APPID=${WETH_API}`)
+    .then(({data}) => {return data})
+}
+
+function onGetLocs() {
+    locService.getLocs()
+    .then(locs => {
+            document.querySelector('.locs').innerText = JSON.stringify(locs, null, 2)
+        })
+    }
+    
+    function onGetUserPos() {
+        getPosition()
         .then(pos => {
             document.querySelector('.user-pos').innerText = 
-                `Latitude: ${pos.coords.latitude} - Longitude: ${pos.coords.longitude}`
+            `Latitude: ${pos.coords.latitude} - Longitude: ${pos.coords.longitude}`
             mapService.panTo(pos.coords.latitude, pos.coords.longitude)
         })
         .catch(err => {
             console.log('err!!!', err)
         })
+}
+
+function getPosition() {
+    return new Promise((resolve, reject) => {
+        navigator.geolocation.getCurrentPosition(resolve, reject)
+    })
 }
 
 // SETTERS
@@ -107,11 +144,6 @@ function setCurrentLocationByQueryParams() {
     onPanTo(lat, lng)
 }
 
-function onSendSearch(val) {
-    console.log(val);
-    mapService.sendLocation(val)
-    // document.querySelector('.user-pos').innerText = val.toUpperCase()
-}
 
 function onSetTitle(locId) {
     const title = document.querySelector(`.title-text`).value
@@ -121,23 +153,4 @@ function onSetTitle(locId) {
 
 }
 
-// This function provides a Promise API to the callback-based-api of getCurrentPosition
-function getPosition() {
-    return new Promise((resolve, reject) => {
-        navigator.geolocation.getCurrentPosition(resolve, reject)
-    })
-}
 
-function getWeather(lat, lng){
-    const WETH_API = 'a6250b674e919a78ea206f38e4dab46d'
-console.log(lat, lng);
-    return axios.get(`http://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lng}&APPID=${WETH_API}`)
-    .then(res => {
-        console.log(res.data);
-        renderWeather(res.data.main.temp)
-    })
-}
-
-function renderWeather(weather){
-    document.querySelector('.weather-container .heading').innerText = ' '+ weather + ' Celsius' 
-}

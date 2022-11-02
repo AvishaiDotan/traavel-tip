@@ -1,24 +1,28 @@
-// import { storageService } from "./storage.service";
 import { locService } from "./loc.service.js";
-// import { utilsService } from "./utils.service.js";
+import { controller } from "../app.controller.js"
+
+
+const initLocation = {lat: 31.776738250628863, lng: 35.23448467254639}
+const initTitle = 'Edit Text'
 
 export const mapService = {
     initMap,
     addMarker,
     panTo,
-    sendLocation,
+    setSearch,
     renderMarkers,
     closeInfoWindow,
+    initLocation,
 }
 
 
-// Var that is used throughout this Module (not global)
 let map
 let currInfoWindow
 let markers = []
 
 
-function initMap(lat = 32.0749831, lng = 34.9120554) {
+
+function initMap(lat = initLocation.lat, lng = initLocation.lng) {
     return _connectGoogleApi().then(() => {
         map = new google.maps.Map(
             document.querySelector('#map'), {
@@ -27,14 +31,12 @@ function initMap(lat = 32.0749831, lng = 34.9120554) {
         })
     })
         .then(_addListener)
-        .then(renderMarkers)
 }
 
 function renderMarkers() {
-    markers.forEach(marker => marker.setMap(null))
     return locService.getLocs()
         .then(locations => {
-            
+            markers.forEach(marker => marker.setMap(null));
             markers = locations.map(({ id, name, lat, lng }) => {
 
                 const marker = new google.maps.Marker({
@@ -53,7 +55,7 @@ function renderMarkers() {
                         <button class="set-title-action" onclick="onSetTitle('${id}')">Save</button>
                         <button onclick="onCloseInfoWidow('${id}')">Cancel</button>
                     </div>
-                </article>`
+                    </article>`
 
                 const infoWindow = new google.maps.InfoWindow({
                     content: contentString,
@@ -81,14 +83,14 @@ function addMarker(loc) {
     var marker = new google.maps.Marker({
         position: loc,
         map: map,
-        title: 'Hello World!',
+        title: initTitle,
     })
 
-    locService.addLoc('hello world', loc.lat(), loc.lng())
+    markers.push(marker)
+    locService.addLoc(initTitle, loc.lat(), loc.lng())
 }
 
 function panTo(lat, lng) {
-    console.log(lat, lng);
     var laLatLng = new google.maps.LatLng(lat, lng)
     map.panTo(laLatLng)
 }
@@ -112,16 +114,13 @@ function _connectGoogleApi() {
     })
 }
 
-function sendLocation(val) {
+function setSearch(val) {
     return axios.get(`https://maps.googleapis.com/maps/api/geocode/json?address=${val}&key=AIzaSyAxdXNT9j1GWz7kU5pwAK8bMSR2OJ0Bg6Q`)
         .then(res => {
-            console.log('im')
             let data = res.data.results[0].geometry.location
-            // var LatLng = new google.maps.LatLng(data.lat, data.lng)
             panTo(data.lat,data.lng)
-            getWeather(data.lat,data.lng)
-            var LatLng = new google.maps.LatLng(data.lat, data.lng)
-            map.panTo(LatLng)
+            controller.getWeather(data.lat,data.lng)
+                .then(controller.renderWeather)
         })
         .catch(console.log)
 }
