@@ -1,3 +1,6 @@
+// import { storageService } from "./storage.service";
+import { locService } from "./loc.service.js";
+
 export const mapService = {
     initMap,
     addMarker,
@@ -5,38 +8,45 @@ export const mapService = {
     sendLocation
 }
 
-var gMarkers = [];
 
 // Var that is used throughout this Module (not global)
 var gMap
 
 function initMap(lat = 32.0749831, lng = 34.9120554) {
-    console.log('initMap')
     return _connectGoogleApi().then(() => {
-        console.log('google available')
         gMap = new google.maps.Map(
             document.querySelector('#map'), {
             center: { lat, lng },
             zoom: 15
         })
-        console.log('Map!', gMap)
     })
-        .then(() => {
-            gMap.addListener("click", (event) => {
-                addMarker(event.latLng);
-            });
+        .then(_addListener)
+        .then(renderMarkers)
+}
 
-        })
+function renderMarkers() {
+    locService.getLocs()
+        .then(markers =>
+            markers.forEach(({ title, lat, lng }) => {
+                new google.maps.Marker({
+                    position: { lat, lng },
+                    map: gMap,
+                    title: title,
+                })
+                return Promise.resolve(locService.getLocs())
+            })
+        )
+
 }
 
 function addMarker(loc) {
     var marker = new google.maps.Marker({
         position: loc,
         map: gMap,
-        title: 'Hello World!'
+        title: 'Hello World!',
     })
-    markers.push(marker);
-    console.log(marker);
+
+    locService.addLoc('hello world', loc.lat(), loc.lng())
 }
 
 function panTo(lat, lng) {
@@ -68,4 +78,13 @@ function sendLocation(val) {
             var laLatLng = new google.maps.LatLng(data.lat, data.lng)
             gMap.panTo(laLatLng)
         })
+}
+
+
+function _addListener() {
+    gMap.addListener("click", (event) => {
+        onAddMarker(event.latLng);
+    });
+
+    return Promise.resolve('')
 }
