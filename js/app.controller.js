@@ -106,6 +106,10 @@ function setCurrentLocationByQueryParams() {
 
 function onSendSearch(val) {
     mapService.sendLocation(val)
+<<<<<<< HEAD
+
+=======
+>>>>>>> 54cdd7aacaa74e9f1579419a21058cb42ab78041
     // document.querySelector('.user-pos').innerText = val.toUpperCase()
 }
 
