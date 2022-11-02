@@ -1,6 +1,7 @@
 import { storageService } from "./storage.service.js"
 import { controller } from "../app.controller.js"
 import { utilService} from "../services/utils.service.js"
+import { mapService } from "./map.service.js"
 
 export const locService = {
     getLocs,
@@ -20,13 +21,16 @@ _createLocs()
 
 function addLoc(name, lat, lng) {
 
-    locs.push({id: utilService.getId(), name, lat, lng, weather: 'cold', createdAt: new Date().toLocaleString(), updatedAt: ''})
+    locs.push({id: utilService.getId(), name, address:'', lat, lng, weather: 'cold', createdAt: new Date().toLocaleString(), updatedAt: ''})
     
     const lastLoc = locs[locs.length - 1]
+
     controller.getWeather(lastLoc.lat, lastLoc.lng)
         .then((weather) => {setWeather(weather, lastLoc)})
+        .then(() => {return mapService.getAddress(lastLoc.lat, lastLoc.lng)})
+        .then((addressStr) => {setAddress(addressStr, lastLoc)})
         .then(_saveToStorage)
-
+        
 }
 
 function deleteLoc(locId) {
@@ -61,7 +65,12 @@ function setTitle(locId, title) {
 function setWeather(weather, loc) {
     const {description} = weather.weather[0]
     loc.weather = description
-    console.log(locs);
+    return Promise.resolve()
+}
+
+function setAddress(addressStr, loc) {
+    console.log('addressStr', addressStr);
+    loc.address = addressStr
     return Promise.resolve()
 }
 

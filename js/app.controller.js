@@ -39,11 +39,11 @@ function renderApp() {
 }
 
 function renderSavedLocations(locations) {
-    let strHTMLs = locations.map(({id ,name, createdAt, lat, lng}) => `
+    let strHTMLs = locations.map(({id ,name, address, createdAt, lat, lng}) => `
                 <article>
                     <h2>${name}</h2>
                     <p>${createdAt}</p>
-                    <p>${lat}, ${lng}</p>
+                    <p>${address}</p>
                     <div class="location-actions">
                         <button onclick="onPanTo(${lat}, ${lng})" class="goto-action" >Go</button>
                         <button onclick="onDeleteLoc('${id}')" class="delete-action">Delete</button>
@@ -58,8 +58,10 @@ function renderSavedLocations(locations) {
 function renderWeather(weather){
     const {temp} = weather.main
     const {description} = weather.weather[0]
+    const {icon} =  weather.weather[0]
 
     document.querySelector('.weather-container .heading').innerText = `${description}, ${temp} celsius` 
+    document.querySelector('.weather-icon').src = `http://openweathermap.org/img/wn/${icon}@4x.png`
 }
 
 
@@ -69,6 +71,7 @@ function renderWeather(weather){
 function onPanTo(lat, lng) {
     mapService.panTo(lat, lng)
     getWeather(lat, lng)
+        .then(renderWeather)
 }
 
 function onDeleteLoc(locId) {

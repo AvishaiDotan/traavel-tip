@@ -13,6 +13,7 @@ export const mapService = {
     renderMarkers,
     closeInfoWindow,
     initLocation,
+    getAddress,
 }
 
 
@@ -112,6 +113,15 @@ function _connectGoogleApi() {
         elGoogleApi.onload = resolve
         elGoogleApi.onerror = () => reject('Google script failed to load')
     })
+}
+
+function getAddress(lat, lng) {
+    return axios.get(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&key=AIzaSyAxdXNT9j1GWz7kU5pwAK8bMSR2OJ0Bg6Q`)
+        .then(res => {
+            const addressStr = res.data.results[0].formatted_address
+            return addressStr
+            })
+        .catch(console.log)
 }
 
 function setSearch(val) {
